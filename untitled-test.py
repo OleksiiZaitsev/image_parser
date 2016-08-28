@@ -1,7 +1,6 @@
-import image_garbage_collector
+class myClass():
 
-clean = image_garbage_collector.garbage_collector()
-
-
-clean  # CLEANER
-
+    def __init__(self):
+        self.i = 1
+obj = myClass()
+print(obj.i)
