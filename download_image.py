@@ -3,10 +3,10 @@ import re
 import random
 import os
 import image_garbage_collector
-
+import except_url_cleaner
 
 path = r'images/'
-url = 'https://www.artstation.com/'
+url = 'http://erofishki.net/2053584-devushki-v-vannoj-komnate.html'
 except_url = []
 
 
@@ -34,7 +34,8 @@ def save(url, name, path = 'images/'):
         with open('{}{}'.format(path, name), "wb") as imgfile:
             imgfile.write(image.content)
 
-    image_garbage_collector.garbage_collector()
+
+
 
 # NAME IMAGE BY URL
 def name(url):
@@ -55,26 +56,27 @@ def search(data):
     for i in data:
         if re.match('.{0,25}\/{2}.{1,50}:*\/{0,50}', i):
             image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*', i)
-            print(image)
             if image:
+                print(i)
                 save(i, name(i))
-            # elif re.findall('rss', i):
-            #     except_url.insert(0, "{}".format(i))
 
             elif re.match('\/\/.+', i):
                 except_url.append("{}{}".format('http:', i))
 
             else:
                 except_url.append("{}".format(i))
-    return except_url
+
 
 search(data(url))
-print(except_url)
+
 while True:
-    for i in except_url:
+    for i in except_url_cleaner.except_cleaner(url, except_url):
+
+# CLEAN FILES FROM THE DICT WITH SAME SIZE
+        image_garbage_collector.garbage_collector()
+
         try:
             search(data(i))
-
-            print(except_url)
+            print(i)
         except:
             print('ups')
