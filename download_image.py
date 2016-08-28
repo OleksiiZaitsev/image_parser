@@ -6,7 +6,9 @@ import image_garbage_collector
 import except_url_cleaner
 
 path = r'images/'
-url = 'http://erofishki.net/2053584-devushki-v-vannoj-komnate.html'
+
+#url = 'http://photochki.com/blondes/7679-lolly.html'
+url = 'https://www.artstation.com/'
 except_url = []
 
 
@@ -25,7 +27,7 @@ def data(url):
 
 # SAVE IMAGE BY URL AND DEF NAME()
 def save(url, name, path = 'images/'):
-    # try:
+
     image = requests.get(url)
     if not os.path.exists(path):
         os.mkdir(path)
@@ -34,7 +36,8 @@ def save(url, name, path = 'images/'):
         with open('{}{}'.format(path, name), "wb") as imgfile:
             imgfile.write(image.content)
 
-
+    # CLEAN FILES FROM THE DICT WITH SAME SIZE
+    # image_garbage_collector.garbage_collector()
 
 
 # NAME IMAGE BY URL
@@ -54,8 +57,10 @@ def name(url):
 # SEARCH THE TEXT
 def search(data):
     for i in data:
+
         if re.match('.{0,25}\/{2}.{1,50}:*\/{0,50}', i):
             image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*', i)
+
             if image:
                 print(i)
                 save(i, name(i))
@@ -71,9 +76,6 @@ search(data(url))
 
 while True:
     for i in except_url_cleaner.except_cleaner(url, except_url):
-
-# CLEAN FILES FROM THE DICT WITH SAME SIZE
-        image_garbage_collector.garbage_collector()
 
         try:
             search(data(i))

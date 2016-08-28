@@ -20,7 +20,9 @@ def search_for_clean(ls, prefix):
     return garbage[1:]
 
 def garbage_collector():
-    for i in create_dict(path).items():
+    items = create_dict(path).items()
+
+    for i in items:
         for i in search_for_clean(create_dict(path), i[1]):
             os.remove(path + i)
 
