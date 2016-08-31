@@ -6,6 +6,7 @@ def except_cleaner(url, except_url):
 
     if re.findall(r'www', url):
         pattern = re.findall(r'htt.{0,10}\/\/.{0,5}\.([a-z|0-9]+)\.{0,1}.*', url)
+
     else:
         pattern = re.findall(r'htt.{0,5}\/\/\.{0,1}([a-z|0-9]+)\.{0,1}', url)
 

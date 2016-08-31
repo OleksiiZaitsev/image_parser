@@ -7,9 +7,9 @@ import except_url_cleaner
 
 path = r'images/'
 image_size = 10000
-url = 'https://www.pinterest.com/'
+#url = 'https://www.pinterest.com/'
 
-#url = 'http://photochki.com/blondes/7679-lolly.html'
+url = 'http://photochki.com/blondes/7679-lolly.html'
 
 except_url = []
 
@@ -60,12 +60,16 @@ def name(url):
 def search(data):
     for i in data:
 
-        if re.match('.{0,25}\/{2}.{1,50}:*\/{0,50}', i):
+        pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:*\/{0,50}.{0,150}jpg*) *'
+        purified = re.search(pattern, i)
+
+        if purified:
             image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*', i)
 
             if image:
                 print(i)
-                save(i, name(i))
+                print(purified.group(1))
+                save(purified.group(1), name(purified.group(1)))
 
             elif re.match('\/\/.+', i):
                 except_url.append("{}{}".format('http:', i))
