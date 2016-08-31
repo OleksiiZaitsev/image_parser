@@ -6,9 +6,11 @@ import image_garbage_collector
 import except_url_cleaner
 
 path = r'images/'
+image_size = 10000
+url = 'https://www.pinterest.com/'
 
 #url = 'http://photochki.com/blondes/7679-lolly.html'
-url = 'https://www.artstation.com/'
+
 except_url = []
 
 
@@ -32,12 +34,12 @@ def save(url, name, path = 'images/'):
     if not os.path.exists(path):
         os.mkdir(path)
 
-    if image.content.__sizeof__() > 10000:
+    if image.content.__sizeof__() > image_size:
         with open('{}{}'.format(path, name), "wb") as imgfile:
             imgfile.write(image.content)
 
     # CLEAN FILES FROM THE DICT WITH SAME SIZE
-    # image_garbage_collector.garbage_collector()
+    image_garbage_collector.garbage_collector(path)
 
 
 # NAME IMAGE BY URL
