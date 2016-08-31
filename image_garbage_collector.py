@@ -1,29 +1,33 @@
 import os
 
-path = r'images/'
-
 # CREATED DICT OF FILES IN DIR "{NAME:SIZE}"
-def create_dict(path):
-    unique = {}
+def ls(path):
+    """RETURN DICT OF FILES {NAME:SIZE}"""
+    items = {}
     files = os.listdir(path)
     for i in files:
-        unique['{}'.format(i)] = os.path.getsize(path + i)
-    return unique
+        items['{}'.format(i)] = os.path.getsize(path + i)
+    return items
 
-
-# CLEAN FILES FROM THE DICT WITH SAME SIZE
-def search_for_clean(ls, prefix):
+# SEARCH FILES FROM THE DICT WITH SAME SIZE
+def search_for_clean(ls, size):
+    """RETURN LIST OF NAMES FOR DELETE"""
     garbage = []
     for i in ls.items():
-        if i[1] == prefix:
+        if i[1] == size:
             garbage.append(i[0])
     return garbage[1:]
 
-def garbage_collector():
-    items = create_dict(path).items()
+# CLEAN FILES FROM THE DICT WITH SAME SIZE
+def garbage_collector(path):
 
-    for i in items:
-        for i in search_for_clean(create_dict(path), i[1]):
-            os.remove(path + i)
+    items = ls(path)
 
+    for size in items.values():
 
+        for i in search_for_clean(items, size):
+            if os.path.exists(path + i):
+                print('# CLEAN FILES FROM THE DIR WITH SAME SIZE :', path + i)
+                os.remove(path + i)
+            else:
+                pass
