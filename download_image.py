@@ -6,10 +6,8 @@ import image_garbage_collector
 import except_url_cleaner
 
 path = r'images/'
-image_size = 10000
-url = 'https://habrahabr.ru/post/31684/'
-
-#url = 'http://photochki.com/blondes/7679-lolly.html'
+image_size = 150000
+url = 'http://photochki.com/'
 
 except_url = []
 
@@ -55,18 +53,21 @@ def name(url):
             return str(random.randint(0,500)) + '_' + '.png'
         elif re.findall('ico', '{}'.format(split_name)):
             return str(random.randint(0,500)) + '_' + '.ico'
+        elif re.findall('gif', '{}'.format(split_name)):
+            return str(random.randint(0,500)) + '_' + '.gif'
+
 
 # SEARCH THE TEXT
 def search(data):
-    for i in data:
-
-        pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}(.png|.jpg|.ico|.JPG)) *'
-        image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*', i)
+    for i in except_url_cleaner.except_cleaner(data, url):
+        print(i)
+        pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}(.png|.jpg|.ico|.JPG|.gif)) *'
+        image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*|.gif.*', i)
 
         purified = re.search(pattern, i)
 
         if purified and image:
-            print(purified.group(1))
+            #print(purified.group(1))
             if purified.group(1) != None:
                 save(purified.group(1), name(purified.group(1)))
 
@@ -81,11 +82,10 @@ def search(data):
 search(data(url))
 
 while True:
-    for i in except_url_cleaner.except_cleaner(url, except_url):
-
+    for i in except_url:
+        print(i)
         try:
             print('=========================',except_url)
             search(data(i))
-            print(i)
         except:
             print('This site can’t be reached')
