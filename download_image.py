@@ -7,7 +7,7 @@ import except_url_cleaner
 
 path = r'images/'
 image_size = 10000
-url = 'https://www.pinterest.com/'
+url = 'https://habrahabr.ru/post/31684/'
 
 #url = 'http://photochki.com/blondes/7679-lolly.html'
 
@@ -67,7 +67,8 @@ def search(data):
 
         if purified and image:
             print(purified.group(1))
-            save(purified.group(1), name(purified.group(1)))
+            if purified.group(1) != None:
+                save(purified.group(1), name(purified.group(1)))
 
         elif re.match('\/\/.+', i):
             except_url.append("{}{}".format('http:', i))
@@ -79,13 +80,12 @@ def search(data):
 
 search(data(url))
 
-
 while True:
     for i in except_url_cleaner.except_cleaner(url, except_url):
 
         try:
-            print('=============================================================')
+            print('=========================',except_url)
             search(data(i))
             print(i)
         except:
-            print('ups')
+            print('This site can’t be reached')
