@@ -7,9 +7,9 @@ import except_url_cleaner
 
 path = r'images/'
 image_size = 10000
-#url = 'https://www.pinterest.com/'
+url = 'https://www.pinterest.com/'
 
-url = 'http://photochki.com/blondes/7679-lolly.html'
+#url = 'http://photochki.com/blondes/7679-lolly.html'
 
 except_url = []
 
@@ -21,7 +21,7 @@ def data(url):
     if encoding == None:
         encoding = 'UTF-8'
         data = r'{}'.format(page.text.encode(encoding=encoding))
-        print(data)
+
         return data.split('"')  # SPLIT DATA BY THE '"' AND RETURN
     else:
         data = r'{}'.format(page.text.encode(encoding=encoding))
@@ -74,10 +74,8 @@ def search(data):
             elif re.match('\/\/.+', i):
                 except_url.append("{}{}".format('http:', i))
 
-            else:
-                except_url.append("{}".format(i))
-
-
+            elif re.match('\/\/.+', i):
+                except_url.append("{}".format( i))
 search(data(url))
 
 while True:
