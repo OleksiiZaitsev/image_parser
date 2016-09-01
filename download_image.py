@@ -60,28 +60,31 @@ def name(url):
 def search(data):
     for i in data:
 
-        pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:*\/{0,50}.{0,150}jpg*) *'
+        pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}(.png|.jpg|.ico|.JPG)) *'
+        image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*', i)
+
         purified = re.search(pattern, i)
 
-        if purified:
-            image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*', i)
+        if purified and image:
+            print(purified.group(1))
+            save(purified.group(1), name(purified.group(1)))
 
-            if image:
-                print(i)
-                print(purified.group(1))
-                save(purified.group(1), name(purified.group(1)))
+        elif re.match('\/\/.+', i):
+            except_url.append("{}{}".format('http:', i))
 
-            elif re.match('\/\/.+', i):
-                except_url.append("{}{}".format('http:', i))
+        elif re.match('https|http.+', i):
+            except_url.append("{}".format(i))
 
-            elif re.match('\/\/.+', i):
-                except_url.append("{}".format( i))
+
+
 search(data(url))
+
 
 while True:
     for i in except_url_cleaner.except_cleaner(url, except_url):
 
         try:
+            print('=============================================================')
             search(data(i))
             print(i)
         except:
