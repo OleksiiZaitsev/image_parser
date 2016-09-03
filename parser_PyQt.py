@@ -5,10 +5,9 @@ import os
 
 
 path = r'images/'
-image_size = 10000
 url = ''
 except_url = []
-
+image_size = 50000
 
 # URL CLEANER
 def except_cleaner(except_url, url):
@@ -96,25 +95,19 @@ def save(url, name, path = 'images/'):
             imgfile.write(image.content)
 
     # CLEAN FILES FROM THE DICT WITH SAME SIZE
-    garbage_collector(path)
+    #garbage_collector(path)
 
 
 # NAME IMAGE BY URL
 def name(url):
-    split_name = re.split('\/|\-|\?', url)
-    search_name = re.findall('(\w+.jpg|\w.png)', '{}'.format(split_name))
+    split_name = re.split('\/|\?', url)
 
-    if len(search_name) > 0:
-        return str(random.randint(0,500)) + '_' + search_name[0]
-    else:
-        if re.findall('jpg', '{}'.format(split_name)):
-            return str(random.randint(0,500)) + '_' + '.jpg'
-        elif re.findall('png', '{}'.format(split_name)):
-            return str(random.randint(0,500)) + '_' + '.png'
-        elif re.findall('ico', '{}'.format(split_name)):
-            return str(random.randint(0,500)) + '_' + '.ico'
-        elif re.findall('gif', '{}'.format(split_name)):
-            return str(random.randint(0,500)) + '_' + '.gif'
+    name = re.findall('\/?(([a-zA-Z0-9\-\_\@]*)\.?(jpg|png|gif|ico|avi|mp4))', '{}'.format(split_name))
+
+    type = re.findall('(jpg|png|gif|ico|avi|mp4)', '{}'.format(split_name))
+
+    if type:
+        return str(str('{}'.format(name[0][1]) + '.' + '{}'.format(type[0])))
 
 
 # SEARCH THE TEXT

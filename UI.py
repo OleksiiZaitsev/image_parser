@@ -4,6 +4,7 @@ from PyQt4 import QtCore, QtGui, QtDeclarative
 from PyQt4.QtNetwork import *
 from PyQt4.QtWebKit import QWebView,QWebPage
 
+
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -70,9 +71,8 @@ class Ui_image_parser_QObject(QtGui.QWidget):
         self.pushButton_GET_IMAGES.clicked.connect(self.GET_IMAGES)
 
     def GET_IMAGES(self):
-        image_size = 10000
         url = self.lineEdit.text()
-
+        image_size = 100000
         search(data(url))
         start()
 
