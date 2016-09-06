@@ -1,2 +1,2 @@
 # image_parser
-# use UI.py as main file for starting program
+# use image_parser as main file for starting program
