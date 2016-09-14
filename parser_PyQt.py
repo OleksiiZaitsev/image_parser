@@ -25,12 +25,20 @@ class bcolors:
 def except_cleaner(except_url, url):
     clean_url = set()
     for i in except_url:
+
         pattern = re.findall(r'(^ht.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}) *', i)
         if pattern:
+            if re.findall('\\\\', url):
+                clean_url.add(i[:-2])
+
+                print(url)
+
             clean_url.add(i)
+
     cleaned_url = list(clean_url)
 
     for i in cleaned_url:
+        print(i)
         if i == url:
             cleaned_url.remove(i)
 
@@ -157,7 +165,7 @@ def start():
     while True:
         for i in except_url:
             if stop != True:
-                print(i)
+                # print(i)
                 try:
                     print(bcolors.WARNING + 'EXCEPT URL: ', except_url)
                     search(data(i))
