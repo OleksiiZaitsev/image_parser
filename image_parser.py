@@ -4,7 +4,6 @@ from PyQt4 import QtCore, QtGui, QtDeclarative
 from PyQt4.QtNetwork import *
 import threading
 
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -18,9 +17,6 @@ try:
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
-
-
 
 class Ui_image_parser_QObject(QtGui.QWidget):
     def __init__(self):
@@ -94,10 +90,6 @@ class Ui_image_parser_QObject(QtGui.QWidget):
 
         p1.start()
         p2.start()
-
-
-
-
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
