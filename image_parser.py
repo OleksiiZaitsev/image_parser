@@ -2,7 +2,7 @@ import sys
 from parser_PyQt import *
 from PyQt4 import QtCore, QtGui, QtDeclarative
 from PyQt4.QtNetwork import *
-
+import threading
 
 
 try:
@@ -20,10 +20,13 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
+
+
 class Ui_image_parser_QObject(QtGui.QWidget):
     def __init__(self):
         QtGui.QWidget.__init__(self)
         self.setupUi(self)
+        self.stop = True
 
     def setupUi(self, image_parser_QObject):
         image_parser_QObject.setObjectName(_fromUtf8("image_parser_QObject"))
@@ -58,9 +61,15 @@ class Ui_image_parser_QObject(QtGui.QWidget):
         self.lineEdit = QtGui.QLineEdit(image_parser_QObject)
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.verticalLayout.addWidget(self.lineEdit)
+
         self.pushButton_GET_IMAGES = QtGui.QPushButton(image_parser_QObject)
         self.pushButton_GET_IMAGES.setObjectName(_fromUtf8("pushButton_GET_IMAGES"))
         self.verticalLayout.addWidget(self.pushButton_GET_IMAGES)
+
+        self.STOP = QtGui.QPushButton(image_parser_QObject)
+        self.STOP.setObjectName(_fromUtf8("STOP"))
+        self.verticalLayout.addWidget(self.STOP)
+
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.retranslateUi(image_parser_QObject)
         QtCore.QMetaObject.connectSlotsByName(image_parser_QObject)
@@ -70,11 +79,24 @@ class Ui_image_parser_QObject(QtGui.QWidget):
         self.pushButton_GET_IMAGES.setText(_translate("image_parser_QObject", "GET IMAGES", None))
         self.pushButton_GET_IMAGES.clicked.connect(self.GET_IMAGES)
 
-    def GET_IMAGES(self):
+        self.STOP.setText(_translate("image_parser_QObject", "STOP", None))
+        self.STOP.clicked.connect(self.return_stop)
+
+    def return_stop(self):
+        stop()
+
+    def GET_IMAGES(self,):
         url = self.lineEdit.text()
         image_size = 100000
-        search(data(url))
-        start()
+
+        p1 = threading.Thread(target=search, args= [data(url),])
+        p2 = threading.Thread(target=start, )
+
+        p1.start()
+        p2.start()
+
+
+
 
 
 if __name__ == '__main__':
