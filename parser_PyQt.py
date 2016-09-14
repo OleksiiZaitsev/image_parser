@@ -7,11 +7,23 @@ path = r'images/'
 url = ''
 except_url = []
 image_size = 50000
+stop = False
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 
 # URL CLEANER
 def except_cleaner(except_url, url):
     clean_url = set()
-
     for i in except_url:
         pattern = re.findall(r'(^ht.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}) *', i)
         if pattern:
@@ -26,7 +38,6 @@ def except_cleaner(except_url, url):
             rss = i
             cleaned_url.remove(i)
             cleaned_url.insert(0,rss)
-
     return cleaned_url
 
 
@@ -110,32 +121,47 @@ def name(url):
 
 
 # SEARCH THE TEXT
-def search(data):
+def search(data, ):
+
     for i in except_cleaner(data, url):
-        print(i)
-        pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}(.png|.jpg|.ico|.JPG|.gif)) *'
-        image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*|.gif.*', i)
-        purified = re.search(pattern, i)
+        if stop != True:
+            print(i)
+            pattern = 'src\=|.{0,10}(h.{0,25}\/{2}.{1,50}:?\/{0,10}.{0,150}(.png|.jpg|.ico|.JPG|.gif)) *'
+            image = re.findall('.png.*|.jpg.*|.ico.*|.JPG.*|.gif.*', i)
+            purified = re.search(pattern, i)
 
-        if purified and image:
-            #print(purified.group(1))
-            if purified.group(1) != None:
-                save(purified.group(1), name(purified.group(1)))
+            if purified and image:
+                #print(purified.group(1))
+                if purified.group(1) != None:
+                    save(purified.group(1), name(purified.group(1)))
 
-        elif re.match('\/\/.+', i):
-            except_url.append("{}{}".format('http:', i))
+            elif re.match('\/\/.+', i):
+                except_url.append("{}{}".format('http:', i))
 
-        elif re.match('https|http.+', i):
-            except_url.append("{}".format(i))
+            elif re.match('https|http.+', i):
+                except_url.append("{}".format(i))
+        else:
+            break
+
+def stop():
+    global stop
+    stop = True
+    print('=== END ===')
+
 
 
 # START THE PROGRAM
 def start():
+    global stop
+    stop = False
     while True:
         for i in except_url:
-            print(i)
-            try:
-                print('=========================', except_url)
-                search(data(i))
-            except:
-                print('This site can’t be reached')
+            if stop != True:
+                print(i)
+                try:
+                    print(bcolors.WARNING + 'EXCEPT URL: ', except_url)
+                    search(data(i))
+                except:
+                    print('This site can’t be reached')
+            else:
+                break
