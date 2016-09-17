@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PARSER</class>
+ <widget class="QWidget" name="PARSER">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>975</width>
+    <height>1170</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PARSER</string>
+  </property>
+  <layout class="QGridLayout" name="LAYOUT">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout_MAIN">
+     <property name="spacing">
+      <number>15</number>
+     </property>
+     <item row="2" column="0">
+      <layout class="QGridLayout" name="gridLayout_ROOT">
+       <item row="0" column="1" colspan="3">
+        <widget class="QLineEdit" name="lineEdit_URL"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_TEXT_URL">
+         <property name="text">
+          <string>URL:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QPushButton" name="pushButton_STOP">
+         <property name="text">
+          <string>STOP</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QPushButton" name="pushButton_START">
+         <property name="text">
+          <string>START</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="5">
+        <widget class="QLineEdit" name="lineEdit_PATH"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_TEXT_PATH">
+         <property name="text">
+          <string>PATH:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="6">
+        <widget class="QLabel" name="IMAGE">
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Plain</enum>
+         </property>
+         <property name="midLineWidth">
+          <number>0</number>
+         </property>
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
