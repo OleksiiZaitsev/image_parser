@@ -6,13 +6,11 @@ from PyQt4.QtNetwork import *
 import threading
 
 app = QtGui.QApplication(sys.argv)
-app.setWindowIcon(QtGui.QIcon('icon.jpg'))
-
 window = QtGui.QWidget()
 UI = screen.Ui_PARSER()
 UI.setupUi(window)
 
-
+app.setWindowIcon(QtGui.QIcon('icon.jpg'))
 path = ''
 url = ''
 except_url = []
