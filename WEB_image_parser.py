@@ -31,8 +31,24 @@ def data(url):
                 data.append(main_url + '/' + i)
             elif re.findall("(^htt.*jpg$|png$|gif$|ico$)", i):
                 data.append(i)
+    elif re.findall(r"\.artstation\.", url):  # www.artstation.com
+        rss_pattern = r'.*"(htt.*rss)".*'
+        rss_url = re.findall(rss_pattern, page.text)
+        if rss_url:
+            page = requests.get(url='{}'.format(rss_url[0]))
+            page_pattern = r'src\="(htt.*?)".*'
+            links = re.findall(page_pattern, page.text)
 
-        return data
+            for i in links:
+                if not re.findall("(^htt.*)", i):
+                    data.append(main_url + '/' + i)
+                elif re.findall("(^htt.*jpg|png|gif|ico.*)", i):
+                    data.append(i)
+        else:
+            i = ["YOOOOOOOOOOOOO"]
+            data.append(i)
+
+    return data
 
 # SAVE IMAGE BY URL
 def save(url: str):
@@ -47,14 +63,16 @@ def save(url: str):
 
 # NAME IMAGE BY URL
 def naming(url: str):
-    name = re.split('\/|\?', url)
-    print(name)
-    image_type = re.findall('(jpg|png|gif|\.ico)', name[-1])
-    if image_type:
-        name = re.findall('(.*)[.].*', name[-1])
-        return str(name[0]) + '.' + str(image_type[0])
-    else:
-        return str(name[-1]) + '.' + str("png")
+    url_separator = re.split('\/|\?', url)
+    print(url_separator)
+    image  = re.findall(".*(jpg|png|gif|ico).*", url)
+    if image:
+        name = re.findall('(.*)[.].*', url_separator[-1])
+        return str(name[0]) + '.' + str(image[0])
+    elif:
+        return str(url_separator[-1]) + '.' + str(re.findall(".*(jpg|png|gif|ico).*", url)[0])
+    elif:
+        return str(url_separator[-1]) + '.' + str("png")
 
 # OPEN DIR
 def open_dir():
