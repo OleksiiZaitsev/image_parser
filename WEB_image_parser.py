@@ -69,9 +69,9 @@ def naming(url: str):
     if image:
         name = re.findall('(.*)[.].*', url_separator[-1])
         return str(name[0]) + '.' + str(image[0])
-    elif:
+    elif temp:
         return str(url_separator[-1]) + '.' + str(re.findall(".*(jpg|png|gif|ico).*", url)[0])
-    elif:
+    elif temp:
         return str(url_separator[-1]) + '.' + str("png")
 
 # OPEN DIR
