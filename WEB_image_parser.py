@@ -19,59 +19,60 @@ image_size = 500
 
 # DATA PREPARATION IN LIST BY URL
 def data(url):
-    page = requests.get(url='{}'.format(url))
-    main_url = re.findall('(htt.*\..{1,4})\/.*', url)[0]
     data = []
-##############################################################################################
-    if re.findall(r"\.zbrushcentral\.", url):  # www.zbrushcentral.com
-        zbrushcentral_search_pattern = r'.*img src\="(.*?)\"'
-        zbrushcentral_links = re.findall(zbrushcentral_search_pattern, page.text)
+    if not re.findall(r'(htt.{1,3}://.+?)', url):
+        url = "https://" + url
+    print(url)
+    ROOT_URL = re.findall('(htt.*\..{1,4}).*', url)
+    page = requests.get(url='{}'.format(url))
+    #################################################################################
+    def images(pattern: str, text: str):
+        pattern = pattern
+        URLs = re.findall(pattern, text)
+        for i in URLs:
+            print(i)
+            if not re.findall("(^htt.*)", i) and re.findall("(jpg|png|gif|ico)", i):
+                data.append(ROOT_URL + '/' + i)
 
-        for i in zbrushcentral_links:
-            if not re.findall("(^htt.*)", i):
-                data.append(main_url + '/' + i)
-            elif re.findall("(^htt.*jpg$|png$|gif$|ico$)", i):
+            elif re.findall("(attachment)", i):
+                data.append(ROOT_URL + '/' + i)
+
+            elif re.findall("(^htt.*jpg|png|gif|ico.*)", i):
                 data.append(i)
-##############################################################################################
-    elif re.findall(r"\.artstation\.", url):  # www.artstation.com
-        rss_pattern = r'.*"(htt.*rss)".*'
-        rss_url = re.findall(rss_pattern, page.text)
-        if rss_url:
-            page = requests.get(url='{}'.format(rss_url[0]))
-            page_pattern = r'src\="(htt.*?)".*'
-            links = re.findall(page_pattern, page.text)
+    #################################################################################
+    RSS_URLs = re.findall(r'.*"(htt.*rss)".*', page.text)
+    if RSS_URLs:
+        RSS = requests.get(url='{}'.format(RSS_URLs[0]))
+        images(r'.*img src\="(.*?)\"', RSS.text)
+        images(r'"(htt.{1,3}://.+?)"',RSS.text)
 
-            for i in links:
-                if not re.findall("(^htt.*)", i):
-                    data.append(main_url + '/' + i)
-                elif re.findall("(^htt.*jpg|png|gif|ico.*)", i):
-                    data.append(i)
-        else:
-            image_pattern = r'.*(htt.*jpg.*?)"?'
-            image_links = re.findall(image_pattern, page.text)
-            for i in image_links:
-                data.append(i)
+    images(r'.*img src\="(.*?)\"', page.text)
+    images(r'"(htt.{1,3}://.+?)"', page.text)
+    images(r'src="(/attachment[\w?\.\=]*[0-9]*)"', page.text)
+    return set(data)
 
-##############################################################################################
-    return tuple(data)
 
 # SAVE IMAGE BY URL
 def save(url: str):
+
+    print(url)
     path = UI.lineEdit_PATH.text() +'/'
-    name = naming(url)
-    image = requests.get(url)
     if not os.path.exists(path):
         os.makedirs(path)
-    if image.content.__sizeof__() > image_size:
-        with open('{}{}'.format(path, name), "wb") as imgfile:
-            imgfile.write(image.content)
+    try:
+        name = naming(url)
+        image = requests.get(url)
+        if image.content.__sizeof__() > image_size:
+            with open('{}{}'.format(path, name), "wb") as imgfile:
+                imgfile.write(image.content)
+    except:
+        print("can`t save:  ", url)
 
 # NAME IMAGE BY URL
 def naming(url: str):
     url_separator = re.split('\/|\?', url)
     type_of_image = re.findall(".*(jpg|png|gif|ico).*", url)
-    name_of_image = re.findall('([a-zA-Z0-9_-]*).*', url_separator[-1])
-
+    name_of_image = re.findall('([=a-zA-Z0-9_-]*).*', url_separator[-1])
     if type_of_image:
         return str(name_of_image[0]) + '.' + str(type_of_image[0])
     else:
@@ -86,6 +87,7 @@ def open_dir():
     os.startfile(os.path.abspath(UI.lineEdit_PATH.text()))
 
 
+
 class programThreadsWhile():
     def __init__(self, save, data):
         self._running = None
@@ -94,12 +96,13 @@ class programThreadsWhile():
 
     def BODY(self):
         self.url = UI.lineEdit_URL.text()
-        for i in self.data(self.url):
+        for i in enumerate(self.data(self.url)):
             if self._running == False: break
-            self.save(i)
-
+            self.save(i[1])
+            UI.progressBar.setProperty("value", i[0])
 
     def START(self):
+        UI.webView.setUrl(QtCore.QUrl(UI.lineEdit_URL.text()))
         self._running = True
         self.Thread = threading.Thread(target=lambda: self.BODY())
         self.Thread.start()
@@ -126,7 +129,6 @@ tread_open_dir = programThreads(lambda: open_dir())
 
 QtCore.QObject.connect(UI.pushButton_START,QtCore.SIGNAL("clicked()"), lambda: tread_parse.START())
 QtCore.QObject.connect(UI.pushButton_STOP, QtCore.SIGNAL("clicked()"), lambda: tread_parse.STOP())
-
 QtCore.QObject.connect(UI.pushButton_OPEN, QtCore.SIGNAL("clicked()"), lambda: tread_open_dir.START())
 
 
