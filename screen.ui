@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1624</width>
-    <height>1527</height>
+    <width>645</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -27,10 +27,27 @@
      </property>
      <item row="2" column="0">
       <layout class="QGridLayout" name="gridLayout_ROOT">
-       <item row="1" column="6">
-        <widget class="QPushButton" name="pushButton_STOP">
+       <item row="2" column="0" colspan="5">
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value">
+          <number>0</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1" colspan="3">
+        <widget class="QLineEdit" name="lineEdit_PATH">
          <property name="text">
-          <string>STOP</string>
+          <string>Temp</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QLineEdit" name="lineEdit_URL">
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
@@ -41,47 +58,40 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_TEXT_PATH">
+       <item row="1" column="4">
+        <widget class="QPushButton" name="pushButton_STOP">
          <property name="text">
-          <string>PATH:</string>
+          <string>STOP</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="5">
-        <widget class="QPushButton" name="pushButton_START">
-         <property name="text">
-          <string>START</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" colspan="7">
-        <widget class="QWebView" name="webView">
-         <property name="url">
-          <url>
-           <string>about:blank</string>
-          </url>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="6">
+       <item row="5" column="4">
         <widget class="QPushButton" name="pushButton_OPEN">
          <property name="text">
           <string>OPEN</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1" colspan="5">
-        <widget class="QLineEdit" name="lineEdit_PATH">
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_TEXT_PATH">
          <property name="text">
-          <string>None</string>
+          <string>PATH:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1" colspan="4">
-        <widget class="QLineEdit" name="lineEdit_URL">
+       <item row="1" column="3">
+        <widget class="QPushButton" name="pushButton_START">
          <property name="text">
-          <string>https://</string>
+          <string>START</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="5">
+        <widget class="QWebView" name="webView">
+         <property name="url">
+          <url>
+           <string>about:blank</string>
+          </url>
          </property>
         </widget>
        </item>
