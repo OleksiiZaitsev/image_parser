@@ -47,7 +47,8 @@ def save(url: str):
     image = urllib.request.urlopen(url)
     if not os.path.exists(path):
         os.mkdir(path)
-    
+    if not os.path.exists(path):
+        os.makedirs(path)
     with open('{}{}'.format(path, name), "wb") as imgfile:
         imgfile.write(image.content)
 
@@ -58,9 +59,9 @@ def myfunc(url):
     pattern = r'.*"(.*jpg|png.*?)".*'
     search = re.findall(pattern, "{}".format(data))
     print(search)
-    if search:
-        save(search[0])
-    
+    # if search:
+    #     save(search[0])
+    #
     
 url = r"https://www.pinterest.com"
     

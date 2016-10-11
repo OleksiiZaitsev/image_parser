@@ -22,6 +22,7 @@ def data(url):
     page = requests.get(url='{}'.format(url))
     main_url = re.findall('(htt.*\..{1,4})\/.*', url)[0]
     data = []
+##############################################################################################
     if re.findall(r"\.zbrushcentral\.", url):  # www.zbrushcentral.com
         zbrushcentral_search_pattern = r'.*img src\="(.*?)\"'
         zbrushcentral_links = re.findall(zbrushcentral_search_pattern, page.text)
@@ -31,6 +32,7 @@ def data(url):
                 data.append(main_url + '/' + i)
             elif re.findall("(^htt.*jpg$|png$|gif$|ico$)", i):
                 data.append(i)
+##############################################################################################
     elif re.findall(r"\.artstation\.", url):  # www.artstation.com
         rss_pattern = r'.*"(htt.*rss)".*'
         rss_url = re.findall(rss_pattern, page.text)
@@ -45,10 +47,13 @@ def data(url):
                 elif re.findall("(^htt.*jpg|png|gif|ico.*)", i):
                     data.append(i)
         else:
-            i = ["YOOOOOOOOOOOOO"]
-            data.append(i)
+            image_pattern = r'.*(htt.*jpg.*?)"?'
+            image_links = re.findall(image_pattern, page.text)
+            for i in image_links:
+                data.append(i)
 
-    return data
+##############################################################################################
+    return tuple(data)
 
 # SAVE IMAGE BY URL
 def save(url: str):
@@ -56,7 +61,7 @@ def save(url: str):
     name = naming(url)
     image = requests.get(url)
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path)
     if image.content.__sizeof__() > image_size:
         with open('{}{}'.format(path, name), "wb") as imgfile:
             imgfile.write(image.content)
@@ -64,15 +69,13 @@ def save(url: str):
 # NAME IMAGE BY URL
 def naming(url: str):
     url_separator = re.split('\/|\?', url)
-    print(url_separator)
-    image  = re.findall(".*(jpg|png|gif|ico).*", url)
-    if image:
-        name = re.findall('(.*)[.].*', url_separator[-1])
-        return str(name[0]) + '.' + str(image[0])
-    elif temp:
-        return str(url_separator[-1]) + '.' + str(re.findall(".*(jpg|png|gif|ico).*", url)[0])
-    elif temp:
-        return str(url_separator[-1]) + '.' + str("png")
+    type_of_image = re.findall(".*(jpg|png|gif|ico).*", url)
+    name_of_image = re.findall('([a-zA-Z0-9_-]*).*', url_separator[-1])
+
+    if type_of_image:
+        return str(name_of_image[0]) + '.' + str(type_of_image[0])
+    else:
+        return str(name_of_image[0]) + '.' + str("png")
 
 # OPEN DIR
 def open_dir():
