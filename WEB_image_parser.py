@@ -22,23 +22,29 @@ def data(url):
     data = []
     if not re.findall(r'(htt.{1,3}://.+?)', url):
         url = "https://" + url
-    print(url)
-    ROOT_URL = re.findall('(htt.*\..{1,4}).*', url)
+
+    ROOT_URL = re.findall('(http.*://.*/)', url)[0]
+
     page = requests.get(url='{}'.format(url))
     #################################################################################
     def images(pattern: str, text: str):
         pattern = pattern
         URLs = re.findall(pattern, text)
+
         for i in URLs:
-            print(i)
+
             if not re.findall("(^htt.*)", i) and re.findall("(jpg|png|gif|ico)", i):
-                data.append(ROOT_URL + '/' + i)
+                data.append(ROOT_URL + "/" + i)
 
             elif re.findall("(attachment)", i):
-                data.append(ROOT_URL + '/' + i)
+                data.append(ROOT_URL + "/" + i)
 
             elif re.findall("(^htt.*jpg|png|gif|ico.*)", i):
                 data.append(i)
+
+            else:
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>     ",i)
+
     #################################################################################
     RSS_URLs = re.findall(r'.*"(htt.*rss)".*', page.text)
     if RSS_URLs:
@@ -49,13 +55,12 @@ def data(url):
     images(r'.*img src\="(.*?)\"', page.text)
     images(r'"(htt.{1,3}://.+?)"', page.text)
     images(r'src="(/attachment[\w?\.\=]*[0-9]*)"', page.text)
+    print(set(data))
     return set(data)
 
 
 # SAVE IMAGE BY URL
 def save(url: str):
-
-    print(url)
     path = UI.lineEdit_PATH.text() +'/'
     if not os.path.exists(path):
         os.makedirs(path)
@@ -99,7 +104,7 @@ class programThreadsWhile():
         for i in enumerate(self.data(self.url)):
             if self._running == False: break
             self.save(i[1])
-            UI.progressBar.setProperty("value", i[0])
+            # UI.progressBar.setProperty("value", i[0])
 
     def START(self):
         UI.webView.setUrl(QtCore.QUrl(UI.lineEdit_URL.text()))
