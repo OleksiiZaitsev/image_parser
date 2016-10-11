@@ -4,6 +4,7 @@ import re, os
 from PyQt4 import QtCore, QtGui, QtDeclarative
 from PyQt4.QtNetwork import *
 import threading
+import time
 
 app = QtGui.QApplication(sys.argv)
 window = QtGui.QWidget()
@@ -91,7 +92,8 @@ def open_dir():
         pass
     os.startfile(os.path.abspath(UI.lineEdit_PATH.text()))
 
-
+# http://www.lenkino.xxx/asian
+# UI.progressBar.setProperty("value", value)
 
 class programThreadsWhile():
     def __init__(self, save, data):
@@ -104,7 +106,6 @@ class programThreadsWhile():
         for i in enumerate(self.data(self.url)):
             if self._running == False: break
             self.save(i[1])
-            # UI.progressBar.setProperty("value", i[0])
 
     def START(self):
         UI.webView.setUrl(QtCore.QUrl(UI.lineEdit_URL.text()))
