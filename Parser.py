@@ -18,19 +18,38 @@ url = ''
 except_url = []
 image_size = 500
 
-UI.horizontalSlider_SIZE.setProperty("value", 0)
-def image_size_value():
-    UI.label_TEXT_SIZE_value.setText('{} Mb'.format(round(UI.horizontalSlider_SIZE.value()*1e-6, 5)))
+QPixmap_images = ['None','None','None', 'None', 'None']
 
 
-size_value_Timer = QTimer()
-size_value_Timer.timeout.connect(image_size_value)
-size_value_Timer.start(1000)
 
+
+def Qimages():
+
+    path = os.path.abspath(UI.lineEdit_PATH.text())
+
+
+    if os.listdir(path):
+        global QPixmap_images
+        files =[os.path.join(path,i) for i in os.listdir(path)]
+        image = os.path.join(path, max(files, key=os.path.getctime))
+        QPixmap_images.append(image)
+
+        UI.label_image01.setPixmap(QtGui.QPixmap(r'{}'.format(QPixmap_images[-1])))
+        UI.label_image02.setPixmap(QtGui.QPixmap(r'{}'.format(QPixmap_images[-2])))
+        UI.label_image03.setPixmap(QtGui.QPixmap(r'{}'.format(QPixmap_images[-3])))
+        UI.label_image04.setPixmap(QtGui.QPixmap(r'{}'.format(QPixmap_images[-4])))
+        UI.label_image05.setPixmap(QtGui.QPixmap(r'{}'.format(QPixmap_images[-5])))
+
+
+Qimages_Timer = QTimer()
+Qimages_Timer.timeout.connect(Qimages)
+Qimages_Timer.start(1000)
 
 # DATA PREPARATION IN LIST BY URL
 def data(url):
     data = []
+    deep_data = []
+
     if not re.findall(r'(htt.{1,3}://.+?)', url):
         url = "http://" + url
 
@@ -56,9 +75,12 @@ def data(url):
                 data.append(i)
 
             else:
-                print("else:    ",i)
+                deep_data.append(i)
+                print("deep_data:    ",i)
 
     #################################################################################
+
+
     RSS_URLs = re.findall(r'.*"(htt.*rss)".*', page.text)
     if RSS_URLs:
         print(RSS_URLs)
@@ -70,19 +92,26 @@ def data(url):
     images(r'"(htt.{1,3}://.+?)"', page.text)
     images(r'src="(/attachment[\w?\.\=]*[0-9]*)"', page.text)
 
+    if UI.checkBox.checkState():
+        for i in set(deep_data):
+            try:
+                deep_URLs = requests.get(url='{}'.format(i))
+                images(r'.*img src\="(.*?)\"', deep_URLs.text)
+                images(r'"(htt.{1,3}://.+?)"', deep_URLs.text)
+                images(r'src="(/attachment[\w?\.\=]*[0-9]*)"', deep_URLs.text)
+            except:
+                print("404    -",    i)
+
     return set(data)
 
 
 # SAVE IMAGE BY URL
 def save(url: str):
-    path = UI.lineEdit_PATH.text() +'/'
-    if not os.path.exists(path):
-        os.makedirs(path)
+    path = dir_path_exists() + '\\'
     try:
         name = naming(url)
         image = requests.get(url)
-        print("""UI.horizontalSlider_SIZE.value()""", UI.horizontalSlider_SIZE.value())
-        if image.content.__sizeof__() > int(UI.horizontalSlider_SIZE.value()):
+        if image.content.__sizeof__() > int(float(UI.lineEdit_SIZE_value.text())*1e+3):
             with open('{}{}'.format(path, name), "wb") as imgfile:
                 imgfile.write(image.content)
     except:
@@ -98,12 +127,19 @@ def naming(url: str):
     else:
         return str(name_of_image[0]) + '.' + str("png")
 
-# OPEN DIR
-def open_dir():
+# DIR PATH EXISTS
+def dir_path_exists():
     if not os.path.exists(os.path.abspath(UI.lineEdit_PATH.text())):
+        if UI.lineEdit_PATH.text() == None:
+            UI.lineEdit_PATH.setText('temp')
         os.mkdir(os.path.abspath(UI.lineEdit_PATH.text()))
+
     else:
         pass
+    return str(os.path.abspath(UI.lineEdit_PATH.text()))
+# OPEN DIR
+def open_dir():
+    dir_path_exists()
     os.startfile(os.path.abspath(UI.lineEdit_PATH.text()))
 
 
@@ -161,7 +197,12 @@ class programThreads():
 tread_parse = programThreadsFor(save, data)
 tread_open_dir = programThreads(lambda: open_dir())
 
+def horizontalSlider_func():
+    UI.lineEdit_SIZE_value.setText("{}".format(UI.horizontalSlider.value()))
 
+
+
+UI.horizontalSlider.valueChanged.connect(horizontalSlider_func)
 
 QtCore.QObject.connect(UI.pushButton_START,QtCore.SIGNAL("clicked()"), lambda: tread_parse.START())
 QtCore.QObject.connect(UI.pushButton_STOP, QtCore.SIGNAL("clicked()"), lambda: tread_parse.STOP())
