@@ -24,9 +24,12 @@ QPixmap_images = ['None','None','None', 'None', 'None']
 
 
 def Qimages():
+    
 
     path = os.path.abspath(UI.lineEdit_PATH.text())
 
+    if not os.path.exists(path):
+        os.mkdir(path)
 
     if os.listdir(path):
         global QPixmap_images
